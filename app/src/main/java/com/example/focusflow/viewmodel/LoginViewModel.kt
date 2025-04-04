@@ -21,6 +21,7 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginViewModel : ViewModel() {
@@ -93,20 +94,55 @@ class LoginViewModel : ViewModel() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             val user = auth.currentUser
-                            user?.let {
-                                val userData = mapOf(
-                                    "uid" to it.uid,
-                                    "name" to it.displayName,
-                                    "email" to it.email
-                                )
-                                firestore.collection("users").document(it.uid).set(userData)
-                                    .addOnSuccessListener {
-                                        Log.d("Firestore", "User added to Firestore")
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.e("Firestore", "Error adding user", e)
-                                    }
+                            if (user == null) {
+                                Log.e("Auth", "FirebaseAuth currentUser is null after sign in!")
+                                signInResult = SignInResult(error = "Auth user is null.")
+                                return@addOnCompleteListener
                             }
+
+                            val uid = user.uid
+                            val userData = mapOf(
+                                "uid" to uid,
+                                "name" to user.displayName,
+                                "email" to user.email
+                            )
+
+                            // Firestore: Save basic user data
+                            firestore.collection("users").document(uid).set(userData)
+                                .addOnSuccessListener {
+                                    Log.d("Firestore", "User added to Firestore")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("Firestore", "Error adding user", e)
+                                }
+
+                            // Realtime Database
+                            val realtimeDb = FirebaseDatabase.getInstance().reference
+                            val userFolder = mapOf(
+                                "name" to user.displayName,
+                                "email" to user.email,
+                                "created_at" to System.currentTimeMillis()
+                            )
+
+                            Log.d("RealtimeDB", "Writing to users/$uid")
+                            realtimeDb.child("users").child(uid).setValue(userFolder)
+                                .addOnSuccessListener {
+                                    Log.d("RealtimeDB", "User folder created successfully")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("RealtimeDB", "Failed to create user folder", e)
+                                }
+
+                            // Firestore: Create user_data doc
+                            firestore.collection("user_data").document(uid)
+                                .set(mapOf("createdAt" to System.currentTimeMillis()))
+                                .addOnSuccessListener {
+                                    Log.d("Firestore", "User folder created in user_data")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("Firestore", "Error creating folder in user_data", e)
+                                }
+
                             signInResult = SignInResult(success = auth)
                         } else {
                             signInResult = SignInResult(
@@ -118,8 +154,8 @@ class LoginViewModel : ViewModel() {
                 signInResult = SignInResult(error = "Invalid Google Sign-In credentials")
             }
         } catch (e: Exception) {
-            Log.e("SignIn", "Error handling sign-in result", e)
-            signInResult = SignInResult(error = e.localizedMessage ?: "Sign-in result handling failed")
+            Log.e("SignIn", "Exception in sign-in result", e)
+            signInResult = SignInResult(error = e.localizedMessage ?: "Error during sign-in")
         }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.focusflow.navigation.AppNavigation
 import com.example.focusflow.ui.theme.FocusFlowTheme
+import com.example.focusflow.viewmodel.LoginViewModel
 import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {

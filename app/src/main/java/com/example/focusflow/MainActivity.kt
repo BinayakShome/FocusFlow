@@ -16,7 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.focusflow.navigation.AppNavigation
 import com.example.focusflow.ui.theme.FocusFlowTheme
 import com.example.focusflow.viewmodel.LoginViewModel
+import com.example.focusflow.views.component.SubjectBox
 import com.google.firebase.FirebaseApp
+import javax.security.auth.Subject
 
 class MainActivity : ComponentActivity() {
     private lateinit var googleAuthViewModel: LoginViewModel

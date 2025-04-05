@@ -42,10 +42,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.focusflow.ui.theme.BlazingOrange
+import com.example.focusflow.ui.theme.CreamyYellow
 import com.example.focusflow.ui.theme.DarkCharcoal
+import com.example.focusflow.ui.theme.PaleLime
+import com.example.focusflow.ui.theme.PowderBlue
 import com.example.focusflow.ui.theme.amber
 import com.example.focusflow.viewmodel.ProfileViewModel
+import com.example.focusflow.views.component.BottomSignature
 import com.example.focusflow.views.component.NoInternet
+import com.example.focusflow.views.component.DataCard
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -158,8 +163,25 @@ fun ProfileScreen(
                             )
                         }
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                item {
+                    Row (modifier = Modifier.fillMaxWidth()){
+                        DataCard(topic = "Subjects Created", modifier = Modifier, color = PowderBlue)
+                        Spacer(modifier = Modifier.width(16.dp))
+                        DataCard(topic = "Hours studied", modifier = Modifier, color = CreamyYellow)
+                    }
+                }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    DataCard("Most Favourite Subject", modifier = Modifier.fillMaxWidth(), color = PaleLime)
+                }
+                item {
+                    BottomSignature()
                 }
             }
         }
     }
 }
+
+// Least fav subject, notes created(optional)

@@ -20,9 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -31,14 +35,26 @@ import com.example.focusflow.ui.theme.DarkCharcoal
 import com.example.focusflow.ui.theme.ErrorRed
 import com.example.focusflow.ui.theme.LightYellow
 import com.example.focusflow.ui.theme.amber
+import com.example.focusflow.viewmodel.HomeViewModel
 import com.example.focusflow.views.component.NoInternet
 import com.example.focusflow.views.component.NoSubject
 import com.example.focusflow.views.component.SearchBar
+import com.example.focusflow.views.component.SubjectCard
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel
+) {
+    val context = LocalContext.current
+    val showNoInternet by viewModel.showNoInternet.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.checkInternetAvailability(context)
+    }
+
     val firebaseUser = FirebaseAuth.getInstance().currentUser
     val userName = firebaseUser?.displayName
         ?.substringBefore('_')
@@ -57,7 +73,7 @@ fun HomeScreen(navController: NavController) {
                         )
                     },
                     actions = {
-                        IconButton(onClick = { navController.navigate("//TODO//") }) {
+                        IconButton(onClick = { navController.navigate("ProfileScreen") }) {
                             Icon(
                                 imageVector = Icons.Default.AccountCircle,
                                 contentDescription = "Profile",
@@ -78,20 +94,29 @@ fun HomeScreen(navController: NavController) {
                 .padding(paddingValues),
             contentAlignment = Alignment.TopCenter
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 16.dp) // space between TopAppBar and SearchBar
+            ) {
+                SearchBar(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                    placeholderText = "Search subject",
+                    onSearch = {}
+                )
+            }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 16.dp)
             ) {
-                item {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    SearchBar(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp),
-                        placeholderText = "Search subject",
-                        onSearch = {}
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                if (showNoInternet) {
+                    item {
+                        NoInternet()
+                    }
+                } else {
+
                 }
             }
         }

@@ -19,6 +19,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.focusflow.R
+import com.example.focusflow.ui.theme.WarningAmber
+import com.example.focusflow.ui.theme.amber
 
 @Composable
 fun NoInternet()
@@ -44,7 +46,7 @@ fun NoInternet()
         )
         Text(
             text = "Low connectivity",
-            color = Color(0xFFFFC107),
+            color = WarningAmber,
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.CenterHorizontally)

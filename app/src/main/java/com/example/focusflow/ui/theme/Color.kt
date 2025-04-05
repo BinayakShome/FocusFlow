@@ -30,3 +30,5 @@ val PowderBlue = Color(0xFFBBDEFB)       // soft blue variant
 val CreamyYellow = Color(0xFFFFF9C4)     // very light yellow
 val SoftLilac = Color(0xFFD1C4E9)        // gentle purple-lilac
 val AquaBlue = Color(0xFF80DEEA)
+val ElectricPink = Color(0xFFEE0979)
+val BlazingOrange = Color(0xFFFF6A00)

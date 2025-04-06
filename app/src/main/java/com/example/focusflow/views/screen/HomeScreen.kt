@@ -3,7 +3,9 @@ package com.example.focusflow.views.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +40,7 @@ import com.example.focusflow.views.component.home.AddSubjectDialog
 import com.example.focusflow.views.component.misc.NoInternet
 import com.example.focusflow.views.component.home.SearchBar
 import com.example.focusflow.views.component.home.SubjectCard
+import com.example.focusflow.views.component.misc.BottomSignature
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +54,10 @@ fun HomeScreen(
 
     val firebaseUser = FirebaseAuth.getInstance().currentUser
     val uid = firebaseUser?.uid
-    val userName = firebaseUser?.displayName ?: "User"
+    val userName = firebaseUser?.displayName
+        ?.substringBefore('_')
+        ?.substringBefore(' ')
+        ?: "User"
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -117,6 +123,11 @@ fun HomeScreen(
                     } else {
                         items(subjectList) { subject ->
                             SubjectCard(subjectName = subject.name)
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(40.dp))
+                            BottomSignature()
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
                 }

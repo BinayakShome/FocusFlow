@@ -66,4 +66,23 @@ class HomeViewModel : ViewModel() {
             Log.e("HomeViewModel", "Failed to fetch subjects: ${exception.message}", exception)
         }
     }
+
+    fun deleteSubject(uid: String, subjectName: String) {
+        Log.d("HomeViewModel", "deleteSubject called with uid=$uid and subjectName=$subjectName")
+
+        val ref = FirebaseDatabase.getInstance()
+            .getReference("users")
+            .child(uid)
+            .child(subjectName)
+
+        ref.removeValue().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("HomeViewModel", "Subject '$subjectName' successfully deleted.")
+                // Refresh the subject list
+                fetchSubjects(uid)
+            } else {
+                Log.e("HomeViewModel", "Failed to delete subject: ${task.exception}")
+            }
+        }
+    }
 }

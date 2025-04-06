@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.focusflow.ui.theme.CoolGreyBlue
@@ -39,7 +41,7 @@ fun SubjectCard(subjectName: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 16.dp)
             .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
@@ -57,6 +59,7 @@ fun SubjectCard(subjectName: String) {
             Card(
                 modifier = Modifier
                     .size(344.dp, 180.dp)
+                    .defaultMinSize(minHeight = 140.dp)
                     .shadow(
                         elevation = 8.dp,
                         shape = RoundedCornerShape(16.dp),
@@ -76,12 +79,14 @@ fun SubjectCard(subjectName: String) {
                         Text(
                             text = subjectName,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 36.sp,
-                            color = DarkCharcoal
+                            fontSize = 32.sp,
+                            color = DarkCharcoal,
+                            maxLines = 3,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Last studied",
+                            text = "Total notes",
                             fontSize = 16.sp,
                             color = CoolGreyBlue
                         )

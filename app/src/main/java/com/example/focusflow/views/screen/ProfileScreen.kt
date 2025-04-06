@@ -169,7 +169,7 @@ fun ProfileScreen(
                     Row (modifier = Modifier.fillMaxWidth()){
                         DataCard(topic = "Subjects Created", modifier = Modifier, color = PowderBlue)
                         Spacer(modifier = Modifier.width(16.dp))
-                        DataCard(topic = "Hours studied", modifier = Modifier, color = CreamyYellow)
+                        DataCard(topic = "Notes created", modifier = Modifier, color = CreamyYellow)
                     }
                 }
                 item {

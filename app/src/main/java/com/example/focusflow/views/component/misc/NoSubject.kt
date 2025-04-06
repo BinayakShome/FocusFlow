@@ -1,4 +1,4 @@
-package com.example.focusflow.views.component
+package com.example.focusflow.views.component.misc
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

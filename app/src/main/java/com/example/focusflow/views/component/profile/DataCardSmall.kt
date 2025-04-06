@@ -1,4 +1,4 @@
-package com.example.focusflow.views.component
+package com.example.focusflow.views.component.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

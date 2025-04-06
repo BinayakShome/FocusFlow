@@ -1,9 +1,10 @@
-package com.example.focusflow.views.component
+package com.example.focusflow.views.component.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -31,18 +33,13 @@ import androidx.compose.ui.unit.sp
 import com.example.focusflow.ui.theme.DarkCharcoal
 import com.example.focusflow.ui.theme.WarningAmber
 
-@Preview(showBackground = true)
-@Composable
-fun SearchBarPreview() {
-    SearchBar()
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
     placeholderText: String = "Search subject",
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit = {},
+    onAddClick: () -> Unit
 ) {
     var query by remember { mutableStateOf("") }
 
@@ -65,22 +62,20 @@ fun SearchBar(
                     fontSize = 20.sp
                 )
             },
-//            leadingIcon = {
-//                Icon(Icons.Default.Search, contentDescription = "Search", tint = SkyBlue)
-//            },
             trailingIcon = {
-                Box(
+                IconButton(
+                    onClick = onAddClick,
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(40.dp)
                         .clip(CircleShape)
-                        .background(WarningAmber), // Or any color you like
-                    contentAlignment = Alignment.Center
+                        .background(WarningAmber)
+                        .padding(1.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add new subject",
                         tint = DarkCharcoal,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(16.dp)
                     )
                 }
             },

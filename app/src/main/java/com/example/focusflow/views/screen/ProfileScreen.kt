@@ -48,9 +48,9 @@ import com.example.focusflow.ui.theme.PaleLime
 import com.example.focusflow.ui.theme.PowderBlue
 import com.example.focusflow.ui.theme.amber
 import com.example.focusflow.viewmodel.ProfileViewModel
-import com.example.focusflow.views.component.BottomSignature
-import com.example.focusflow.views.component.NoInternet
-import com.example.focusflow.views.component.DataCard
+import com.example.focusflow.views.component.misc.BottomSignature
+import com.example.focusflow.views.component.misc.NoInternet
+import com.example.focusflow.views.component.profile.DataCard
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)

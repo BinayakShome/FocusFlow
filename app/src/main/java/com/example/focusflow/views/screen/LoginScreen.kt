@@ -40,7 +40,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.focusflow.R
 import com.example.focusflow.data.SignInResult
 import com.example.focusflow.viewmodel.LoginViewModel
-import com.example.focusflow.views.component.LoginButton
+import com.example.focusflow.views.component.misc.LoginButton
 
 @Composable
 fun LoginScreen(

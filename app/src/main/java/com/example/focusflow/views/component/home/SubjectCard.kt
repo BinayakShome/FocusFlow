@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.focusflow.data.Subject
 import com.example.focusflow.ui.theme.CoolGreyBlue
 import com.example.focusflow.ui.theme.DarkCharcoal
+import com.example.focusflow.ui.theme.ErrorRed
 import com.example.focusflow.ui.theme.SkyBlue
 import com.example.focusflow.ui.theme.amber
 import com.example.focusflow.viewmodel.HomeViewModel
@@ -73,13 +74,13 @@ fun SubjectCard(
             Card(
                 modifier = Modifier
                     .size(344.dp, 180.dp)
-                    .defaultMinSize(minHeight = 140.dp)
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(16.dp),
-                        ambientColor = Color.Red,
-                        spotColor = Color.Red
-                    ),
+                    .defaultMinSize(minHeight = 140.dp),
+//                    .shadow(
+//                        elevation = 8.dp,
+//                        shape = RoundedCornerShape(16.dp),
+//                        ambientColor = Color.Red,
+//                        spotColor = Color.Red
+//                    ),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = amber)
             ) {
@@ -113,9 +114,9 @@ fun SubjectCard(
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete subject",
-                            tint = Color.Red,
+                            tint = ErrorRed,
                             modifier = Modifier
-                                .size(24.dp)
+                                .size(32.dp)
                                 .clickable {
                                     showConfirmDialog = true
                                 }

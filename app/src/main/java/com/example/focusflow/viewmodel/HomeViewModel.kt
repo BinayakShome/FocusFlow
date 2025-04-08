@@ -19,6 +19,9 @@ class HomeViewModel : ViewModel() {
     private val _subjects = MutableStateFlow<List<Subject>>(emptyList())
     val subjects: StateFlow<List<Subject>> = _subjects
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     fun checkInternetAvailability(context: Context) {
         viewModelScope.launch {
             _showNoInternet.value = !NetworkUtils.isInternetAvailable(context)
@@ -46,24 +49,21 @@ class HomeViewModel : ViewModel() {
     }
 
     fun fetchSubjects(uid: String) {
-        Log.d("HomeViewModel", "fetchSubjects called with uid=$uid")
-
+        _isLoading.value = true
         val ref = FirebaseDatabase.getInstance().getReference("users").child(uid)
         ref.get().addOnSuccessListener { snapshot ->
             val subjectList = mutableListOf<Subject>()
-            Log.d("HomeViewModel", "Data snapshot received: ${snapshot.childrenCount} children")
             for (child in snapshot.children) {
                 val name = child.key ?: continue
                 if (name == "email" || name == "name" || name == "created_at") continue
-
                 val createdAt = child.child("created_at").getValue(Long::class.java) ?: 0L
-                Log.d("HomeViewModel", "Subject found: $name created at $createdAt")
                 subjectList.add(Subject(name = name, createdAt = createdAt))
             }
             _subjects.value = subjectList.sortedByDescending { it.createdAt }
-            Log.d("HomeViewModel", "Subjects updated: ${_subjects.value}")
-        }.addOnFailureListener { exception ->
-            Log.e("HomeViewModel", "Failed to fetch subjects: ${exception.message}", exception)
+            _isLoading.value = false
+        }.addOnFailureListener {
+            Log.e("HomeViewModel", "Failed to fetch subjects", it)
+            _isLoading.value = false
         }
     }
 

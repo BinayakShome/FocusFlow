@@ -41,6 +41,8 @@ import com.example.focusflow.views.component.misc.NoInternet
 import com.example.focusflow.views.component.home.SearchBar
 import com.example.focusflow.views.component.home.SubjectCard
 import com.example.focusflow.views.component.misc.BottomSignature
+import com.example.focusflow.views.component.misc.Loading
+import com.example.focusflow.views.component.misc.NoSubject
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +63,7 @@ fun HomeScreen(
         ?: "User"
 
     var showDialog by remember { mutableStateOf(false) }
+    val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(uid) {
         viewModel.checkInternetAvailability(context)
@@ -114,18 +117,29 @@ fun HomeScreen(
                         .fillMaxSize()
                         .padding(top = 16.dp)
                 ) {
-                    if (showNoInternet) {
-                        item { NoInternet() }
-                    } else {
-                        items(subjectList) { subject ->
-                            uid?.let {
-                                SubjectCard(subject = subject, uid = it, homeViewModel = viewModel)
+                    when {
+                        showNoInternet -> {
+                            item { NoInternet() }
+                        }
+                        isLoading -> {
+                            item {
+                                Loading()
                             }
                         }
-                        item {
-                            Spacer(modifier = Modifier.height(40.dp))
-                            BottomSignature()
-                            Spacer(modifier = Modifier.height(16.dp))
+                        subjectList.isEmpty() -> {
+                            item {
+                                NoSubject()
+                            }
+                        }
+                        else -> {
+                            items(subjectList) { subject ->
+                                SubjectCard(subject = subject, uid = uid, homeViewModel = viewModel)
+                            }
+                            item {
+                                Spacer(modifier = Modifier.height(40.dp))
+                                BottomSignature()
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
                         }
                     }
                 }

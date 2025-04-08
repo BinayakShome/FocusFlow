@@ -1,6 +1,7 @@
 package com.example.focusflow.views.component.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,14 +35,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.focusflow.data.Subject
 import com.example.focusflow.ui.theme.CoolGreyBlue
 import com.example.focusflow.ui.theme.DarkCharcoal
-import com.example.focusflow.ui.theme.ErrorRed
 import com.example.focusflow.ui.theme.SkyBlue
 import com.example.focusflow.ui.theme.amber
+import com.example.focusflow.viewmodel.HomeViewModel
 
 @Composable
-fun SubjectCard(subjectName: String) {
+fun SubjectCard(
+    subject: Subject,
+    uid: String?,
+    homeViewModel: HomeViewModel
+) {
+    var showConfirmDialog by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -48,6 +60,7 @@ fun SubjectCard(subjectName: String) {
         Box(
             modifier = Modifier.size(344.dp, 180.dp)
         ) {
+            // Shadow layer
             Box(
                 modifier = Modifier
                     .matchParentSize()
@@ -56,6 +69,7 @@ fun SubjectCard(subjectName: String) {
                     .background(SkyBlue)
             )
 
+            // Main card
             Card(
                 modifier = Modifier
                     .size(344.dp, 180.dp)
@@ -77,7 +91,7 @@ fun SubjectCard(subjectName: String) {
                 ) {
                     Column {
                         Text(
-                            text = subjectName,
+                            text = subject.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 32.sp,
                             color = DarkCharcoal,
@@ -99,12 +113,29 @@ fun SubjectCard(subjectName: String) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete subject",
-                            tint = ErrorRed,
-                            modifier = Modifier.size(24.dp)
+                            tint = Color.Red,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clickable {
+                                    showConfirmDialog = true
+                                }
                         )
                     }
                 }
             }
         }
+    }
+
+    // Confirmation dialog
+    if (showConfirmDialog) {
+        ConfirmDelete(
+            onCancel = { showConfirmDialog = false },
+            onDelete = {
+                showConfirmDialog = false
+                uid?.let {
+                    homeViewModel.deleteSubject(it, subject.name)
+                }
+            }
+        )
     }
 }

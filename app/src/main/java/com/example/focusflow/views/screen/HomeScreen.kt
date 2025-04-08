@@ -51,6 +51,7 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val showNoInternet by viewModel.showNoInternet.collectAsState()
+    val subjectList by viewModel.subjects.collectAsState()
 
     val firebaseUser = FirebaseAuth.getInstance().currentUser
     val uid = firebaseUser?.uid
@@ -60,8 +61,6 @@ fun HomeScreen(
         ?: "User"
 
     var showDialog by remember { mutableStateOf(false) }
-
-    val subjectList by viewModel.subjects.collectAsState()
 
     LaunchedEffect(uid) {
         viewModel.checkInternetAvailability(context)
@@ -96,8 +95,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(paddingValues),
-            contentAlignment = Alignment.TopCenter
+                .padding(paddingValues)
         ) {
             Column(
                 modifier = Modifier
@@ -117,12 +115,12 @@ fun HomeScreen(
                         .padding(top = 16.dp)
                 ) {
                     if (showNoInternet) {
-                        item {
-                            NoInternet()
-                        }
+                        item { NoInternet() }
                     } else {
                         items(subjectList) { subject ->
-                            SubjectCard(subjectName = subject.name)
+                            uid?.let {
+                                SubjectCard(subject = subject, uid = it, homeViewModel = viewModel)
+                            }
                         }
                         item {
                             Spacer(modifier = Modifier.height(40.dp))
